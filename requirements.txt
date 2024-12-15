@@ -1,4 +1,5 @@
 streamlit
+OpenCV
 opencv-python-headless
 scikit-learn 
 scikit-image
