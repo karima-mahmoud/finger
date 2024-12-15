@@ -13,12 +13,27 @@ POINTS = 8 * RADIUS
 model_path = "knn_model.pkl"
 
 # Functions for Preprocessing and Feature Extraction
-def preprocess_image(image_path):
-    img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+#def preprocess_image(image_path):
+ #   img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+#    _, binary_img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+  #  kernel = np.ones((3, 3), np.uint8)
+  #  clean_img = cv2.morphologyEx(binary_img, cv2.MORPH_OPEN, kernel)
+#    return clean_img
+def preprocess_image(uploaded_file):
+    # Read the uploaded image from the buffer
+    img_array = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
+    img = cv2.imdecode(img_array, cv2.IMREAD_GRAYSCALE)
+
+    # Check if the image was successfully read
+    if img is None:
+        st.error("Failed to read the image. Please upload a valid image file.")
+        return None
+    # Apply thresholding and other preprocessing steps
     _, binary_img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     kernel = np.ones((3, 3), np.uint8)
     clean_img = cv2.morphologyEx(binary_img, cv2.MORPH_OPEN, kernel)
     return clean_img
+
 
 def extract_lbp_features(image):
     lbp = local_binary_pattern(image, POINTS, RADIUS, method="uniform")
